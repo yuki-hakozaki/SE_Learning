@@ -1,0 +1,35 @@
+.task-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.task-text {
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.completed {
+    text-decoration: line-through;
+}
+
+form {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+form > input[type="submit"] {
+    margin-left: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+form > input[type="submit"]:hover {
+    background-color: #eee;
+}
+
+/* form > input の間の>は無くても動くが、それ以外の記号(例えば<や=など)では動かない*/

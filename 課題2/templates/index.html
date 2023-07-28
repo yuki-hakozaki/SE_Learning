@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>タスクリスト</title>
+    <!--文字コードを指定。titleは題字-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <!--staticファイルのstyle.cssを読み込み-->
+</head>
+<body>
+    <h1>タスクリスト</h1>
+    <form method="post" action="/">
+        <!-- method はフォームを送信する際にブラウザーが使用するHTTPメソッド。flaskのapp.routeで定義した操作の
+        　methods=[]の中身と対応させる必要がある。actionは、処理するプログラムの URL。-->
+        <input type="text" name="task">
+        <input type="submit" value="登録">
+        <!--input type= xxx のxxxには色んな型が入る。textの場合はテキスト入力フォーム、submitの場合はフォーム送信ボタン。
+        　それ以外にも沢山あるが、例えばbuttonとするとボタンになる。name=taskのtaskはフォームの名前で、app.pyのrequest.form['task']に対応する。
+        　なお、ルートディレクトリにアクセスした時点でPythonのGET側の処理が実行される。-->
+    </form>
+    {% for row in rows %}
+    <!-- jinja2モジュールによるforループ。rowはデータベースにおける行で、行分だけループして出力する。
+        Jinja2ではfor XX in XXsという構文になっている？今何回のループかは何処に保存されている？-->
+        <div class="task-container">
+        <!--class=によって、出力するテキストボックスの書式をcssのtask-containerから読み込む-->
+            <form method="post" action="/complete/{{ row[0] }}">
+                <!--row[0]はdbにおける取得した行の0番目の値(pandasと同じく1行目は0と考える)で、今回の場合はタスクID-->
+                <div class="task-text {% if row[2] == 1 %}completed{% endif %}">
+                    {{ row[1] }}
+                </div>
+                <!--row[1]はタスクの名前。row[2]classの末尾にcompletedがつき、cssの設定から打消し文字が入る。-->>
+                <input type="hidden" name="completed" value="{{ row[2] }}">
+                <input type="hidden" name="task" value="{{ row[1] }}">
+                <!--サーバーにタスクの名前と状態を送り返すが、hiddenなのでWeb上では見えない。-->>
+                <input type="submit" value="{% if row[2] == 1 %}未完了{% else %}完了{% endif %}">
+                <!--完了ボタンを設置。Pythonの/completed処理を呼び出す。タスクの状態によって完了ボタンのテキストを変える。-->>
+            </form>
+            <form method="get" action="/edit/{{ row[0] }}">
+                <input type="submit" value="編集">
+                <!--編集ボタンを設置。Pythonの/edit編集処理を呼び出す。-->
+            </form>
+            <form method="post" action="/delete/{{ row[0] }}" onsubmit="return confirm('削除しますか？');">
+                <input type="submit" value="削除">
+                <!--削除ボタンを設置。Pythonの/delete/削除処理を呼び出す。onsubmitはJavaScript？-->
+            </form>
+        </div>
+    {% endfor %}
+</body>
+</html>
