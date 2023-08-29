@@ -1,0 +1,12 @@
+.place1 {
+    display: flex;/*flexにすることで乱数と削除ボタンを横並びにする*/
+    align-items: center; /*乱数と削除ボタンの中央ぞろえ。startにすると全削除ボタンにぴったりくっつく*/
+    margin-bottom: 10px;/*出力した乱数同士の幅*/
+}
+
+.place2 {
+    margin-right: 3px;/*乱数と削除ボタンの幅*/
+    padding: 0px;
+    border: 0px solid #ccc;/*ボーダーとパディングの関係性は参考リンクを見る*/
+    border-radius: 5px;/*削除ボタンの角をどれくらい丸めるか*/
+}

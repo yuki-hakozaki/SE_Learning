@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>乱数生成ボタン</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>乱数生成ボタン</h1>
+    <form method="post" action="/">
+        <input type="submit" value="生成">
+    </form>
+    <form method="post" action="/deleteall">
+        <input type="submit" value="全削除">
+    </form> 
+    {% for row in rows %}
+    <div class = "place1">
+         <div class = "place2">
+        {{row[1]}}
+         </div> <!--divじゃなくpで囲うと、cssで設定しなくても乱数同士のスペースを一段落開けることができる-->
+        <form method="post" action="/delete/{{ row[0] }}">
+            <input type="submit" value="削除">
+        </form>
+    </div>
+
+    {% endfor %}
+</body>
+

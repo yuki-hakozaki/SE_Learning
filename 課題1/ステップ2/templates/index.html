@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet"  href="/static/css/style.css">
+  <title>TODOアプリ</title>
+  <script
+src="https://code.jquery.com/jquery-3.5.1.js"
+integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <main>
+    <div id="title" class="title">タスク</div>
+    <form name="f" method="post">
+      <div class="text_area"><input type="text" name="new_text" id="new_text"></div>
+      <table>
+{% for task in tasks %}
+        <tr>
+          <td
+            class="card"
+            id="task_{{task.id}}"
+            task_id="{{task.id}}">{{ task.text }}
+          </td>
+          <td class="td_update_txt" id="update_txt_{{task.id}}">
+            <input type="text" class="txt_update" name="update_txt" task_id="{{ task.id }}" value="{{ task.text }}">
+          </td>
+          <td class="button"><button type="button" name="btn_update" value="{{ task.id }}">変更</button></td>
+          <td class="button"><button type="button" name="btn_delete" value="{{ task.id }}">削除</button></td>
+        </tr>
+{% endfor %}
+      </table>
+      <input type="hidden" name="id" id="id">
+      <input type="hidden" name="text" id="text">
+    </form>
+  </main>
+  <script>
+    $(document).ready(function(){
+      $('#new_text').keydown(function(e) {
+        if (e.keyCode == 13) {
+          $('form[name="f"]').attr('action', '/new')
+          $('form[name="f"]').submit();
+        }
+      });
+    });
+    $('button[name="btn_update"]').click(function() {
+    var id = $(this).val();
+    if ($('#update_txt_' + id).is(':visible')) {
+      $('#update_txt_' + id).hide();
+      $('#task_' + id).show();
+      $(this).text('変更');
+    } else {
+      $('#update_txt_' + id).show();
+      $('#task_' + id).hide();
+      $(this).text('戻す');
+    }
+    });
+    $('input[name="update_txt"]').keydown(function(e) {
+          if (e.keyCode == 13) {
+            var id = $(this).attr("task_id");
+            $('#id').val(id);
+            var text = $(this).val();
+            $('#text').val(text)
+            $('form[name="f"]').attr('action', '/update');
+            $('form[name="f"]').submit();
+          }
+    });
+    $('button[name="btn_delete"]').click(function() {
+      var id = $(this).val();
+      $('#id').val(id);
+      $('form[name="f"]').attr('action', '/delete');
+      $('form[name="f"]').submit();
+    });
+  </script>
+</body>
+
+</html>
