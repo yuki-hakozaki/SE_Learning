@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>乱数生成</title>
+</head>
+<body>
+  <h1>乱数生成</h1>
+  <button id="generateButton">生成</button> 
+  <div id="randomNumber"></div>
+  <!-- ボタンを配置し、randomNumberに表示 -->
+
+  <script>
+    // 乱数生成ボタンがクリックされたときの処理
+    document.getElementById('generateButton').addEventListener('click', function() {
+      // APIエンドポイントにリクエストを送信
+      fetch('/random')
+        .then(response => response.json())
+        .then(data => {
+          // レスポンスから乱数を取得して表示
+          document.getElementById('randomNumber').textContent = '乱数: ' + data.randomNumber;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+  </script>
+</body>
+</html>
