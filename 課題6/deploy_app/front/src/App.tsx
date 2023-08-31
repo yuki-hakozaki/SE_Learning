@@ -29,7 +29,7 @@ const App = (): JSX.Element => {
   const fetchTodoList = (): void => {
   // fetchTodoList関数を定義  
   // voidはその関数が戻り値を返さないことを宣言する型。何らかの処理や別の関数を同時に実行したい時などに使われる。
-    fetch('http://13.114.222.199:3001/api/v1/list')
+    fetch('http://54.64.138.161:3001/api/v1/list')
     // fetch関数を使って、指定されたURL（'./api/v1/list'）にリクエスト。メソッドは指定が無いのでデフォルトのGET
       .then((response) => response.json())
       // アクセスに成功すると、サーバーが現在のTodoリストをJSON形式で返してくるので、それをJSONとして解析する。
@@ -41,7 +41,7 @@ const App = (): JSX.Element => {
 
   const addTodoItem = (title: string): void => {
   // addTodoItem関数を定義
-    fetch('http://13.114.222.199:3001/api/v1/add', {
+    fetch('http://54.64.138.161:3001/api/v1/add', {
       method: 'POST',
       // './api/v1/add'にPOSTでリクエスト。
       body: JSON.stringify({ title }),
@@ -62,7 +62,7 @@ const App = (): JSX.Element => {
 
   const updateTodoItem = (id: number, done: boolean): void => {
   // updateTodoItem関数を定義
-    fetch(`http://13.114.222.199:3001/api/v1/item/${id}`, {
+    fetch(`http://54.64.138.161:3001/api/v1/item/${id}`, {
     // './api/v1/item/${id}'にPUTでリクエスト。idは各タスク固有のidで、元はサーバーサイドのuuidで付与されたもの。
       method: 'PUT',
       // メソッドはPUT。
@@ -78,7 +78,7 @@ const App = (): JSX.Element => {
 
   const deleteTodoItem = (id: number): void => {
   // deleteTodoItem関数を定義
-    fetch(`http://13.114.222.199:3001/api/v1/item/${id}`, { method: 'DELETE' })
+    fetch(`http://54.64.138.161:3001/api/v1/item/${id}`, { method: 'DELETE' })
     // './api/v1/item/${id}'にDELETEでリクエスト。
       .then(() => fetchTodoList())
       // fetchTodoList関数を実行し、サーバーから最新のTodoリストを読み込む。

@@ -1,0 +1,38 @@
+---
+- name: Launch EC2 instance with Elastic IP
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Allocate a new Elastic IP
+      amazon.aws.ec2_eip:
+        region: ap-northeast-1
+      register: eip
+
+    - name: Launch EC2 instance
+      amazon.aws.ec2_instance:
+        key_name: "2nd_key"
+        instance_type: t2.micro
+        image_id: "ami-0310b105770df9334"
+        region: ap-northeast-1
+        count: 1
+        wait: yes
+        tags:
+          Name: Ansible_auto
+      register: ec2
+      
+    - name: Wait for instance to be running
+      amazon.aws.ec2_instance_info:
+        instance_ids:
+          - "{{ ec2.instances[0].instance_id }}"
+        region: ap-northeast-1
+      register: ec2_info
+      until: ec2_info.instances[0].state.name == 'running'
+      retries: 30
+      delay: 10
+
+    - name: Associate Elastic IP with the instance
+      amazon.aws.ec2_eip:
+        region: ap-northeast-1
+        device_id: "{{ ec2.instances[0].instance_id }}"
+        public_ip: "{{ eip.public_ip }}"
+
