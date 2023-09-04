@@ -1,5 +1,5 @@
 ---
-- name: Launch EC2 instance with Elastic IP
+- name: Launch EC2 instance with Elastic IP and security group
   hosts: localhost
   gather_facts: no
   tasks:
@@ -16,8 +16,10 @@
         region: ap-northeast-1
         count: 1
         wait: yes
+        security_groups:
+          - launch-wizard-2
         tags:
-          Name: Ansible_auto
+          Name: Ansible_auto2
       register: ec2
       
     - name: Wait for instance to be running
@@ -35,4 +37,17 @@
         region: ap-northeast-1
         device_id: "{{ ec2.instances[0].instance_id }}"
         public_ip: "{{ eip.public_ip }}"
+
+    - name: Exprot Elastic IP to in-memory inventory
+      add_host:
+        name: "{{ eip.public_ip }}"
+        groups: newly_created
+    
+    - name: Wait for SSH to become available
+      ansible.builtin.wait_for:
+        host: "{{ eip.public_ip}}"
+        port: 22
+        delay: 10
+        timeout: 300
+      delegate_to: localhost
 

@@ -1,0 +1,89 @@
+- name: Install Node and global modules for EC2
+  hosts: newly_created
+  vars:
+    nvm_version: "0.39.0"
+    node_version: "18.16.0"
+    app_location: "/home/ec2-user/app/"
+    ansible_ssh_private_key_file: "/home/hakozaki-ubuntu/SE_leraning/課題3/SSH_key/2nd_key.pem"
+    ansible_ssh_user: ec2-user
+  tasks:
+    - name: Update the system
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+      become: yes
+
+    - name: Create app location
+      file:
+        path: /home/ec2-user/app
+        state: directory
+        owner: ec2-user
+        group: ec2-user
+        mode: '0755'
+      become: yes
+
+    - name: Copy SSH key to the remote server
+      copy:
+        src: /home/hakozaki-ubuntu/.ssh/id_ed25519
+        dest: /home/ec2-user/.ssh/id_ed25519
+        owner: ec2-user
+        group: ec2-user
+        mode: '0600'
+      become: yes
+
+    - name: Install git
+      yum:
+        name: git
+        state: present
+      become: yes
+
+    - name: Download nvm install script
+      get_url:
+        url: https://raw.githubusercontent.com/nvm-sh/nvm/v{{ nvm_version }}/install.sh
+        dest: /tmp/install_nvm.sh
+        mode: '0755'
+      become: yes
+
+    - name: Install NVM
+      shell: bash /tmp/install_nvm.sh
+      become: yes
+      become_user: ec2-user
+
+    - name: Source the NVM directory
+      shell: |
+        source ~/.nvm/nvm.sh
+        nvm install {{ node_version }}
+        nvm alias default {{ node_version }}
+      args:
+        executable: /bin/bash
+      become: yes
+      become_user: ec2-user
+
+    - name: Install yarn
+      shell: |
+        source ~/.nvm/nvm.sh
+        npm install -g yarn
+      args:
+        executable: /bin/bash
+      become: yes
+      become_user: ec2-user 
+
+    - name: Install PM2
+      shell: |
+        source ~/.nvm/nvm.sh
+        yarn global add pm2
+      args:
+        executable: /bin/bash
+      become: yes
+      become_user: ec2-user 
+
+    - name: Get yarn global bin directory
+      command: yarn global bin
+      register: yarn_bin_output
+      changed_when: false
+
+    - name: Add yarn global bin directory to PATH in .bashrc
+      lineinfile:
+        path: /home/ec2-user/.bashrc
+        line: 'export PATH="$PATH:{{ yarn_bin_output.stdout }}"'
+        state: present
