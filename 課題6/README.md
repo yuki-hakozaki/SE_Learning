@@ -13,4 +13,4 @@ setup_ec2.yml
 - Ansibleでインスタンスの設定を行うためのyml。「Ansible-playbook -i inventory.ini setup_ec2.ini」を実行する。
 
 おまけファイル
-- インスタンスの自動生成までAnsibleでやってしまったときのファイル。launchとsetupを同時に実行すれば、インスタンスの生成とセットアップまでを自動で完了させる。だが、インスタンスの自動生成はAnsibleではなくAWS Cloud formationで行うので、今回は使用しない。だが勉強にはなったので一応残しておく。
+- インスタンスの自動生成までAnsibleでやってしまったときのファイル。マシンにGitをインストールし、AWSへのアクセスキーとシークレットアクセスキーを登録、また`pip install boto3`および`ansible-galaxy collection install amazon.aws`を実行したのちに、launchとsetupを同時に実行すれば、インスタンスの生成とセットアップまでを自動で完了させる。だが、インスタンスの自動生成はAnsibleではなくAWS Cloud formationで行うので、今回は使用しない。だが勉強にはなったので一応残しておく。
