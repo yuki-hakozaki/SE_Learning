@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation Template to create a DynamoDB table.
+
+Resources:
+  MyDynamoDBTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: 'CTS-SampleTable'
+      AttributeDefinitions:
+        - AttributeName: 'UserId'
+          AttributeType: 'S'
+      KeySchema:
+        - AttributeName: 'UserId'
+          KeyType: 'HASH'
+      ProvisionedThroughput:
+        ReadCapacityUnits: '5'
+        WriteCapacityUnits: '5'
+      Tags:
+        - Key: 'Purpose'
+          Value: 'Sample CloudFormation DynamoDB Table Creation'
+
+Outputs:
+  TableName:
+    Description: 'DynamoDB Table Name'
+    Value: !Ref MyDynamoDBTable

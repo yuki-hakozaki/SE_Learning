@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFormation Template to create an S3 Bucket'
+
+Resources:
+  MySampleS3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: 'cts-cloudformation-test-bucket'
+      AccessControl: 'Private'
+      Tags:
+        - Key: 'Purpose'
+          Value: 'Sample CloudFormation Creation'
+
+Outputs:
+  BucketName:
+    Description: 'Name of the S3 Bucket'
+    Value: !Ref MySampleS3Bucket
